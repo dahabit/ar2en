@@ -4,6 +4,7 @@
 
 import os
 import sys
+import shutil
 
 chart = { "أ" : "a" ,
           "ا" : "a" ,
@@ -42,7 +43,7 @@ chart = { "أ" : "a" ,
         }
 
 def iterate( loc ):
-    loc = os.path.abspath( loc )
+    print "Checking : " + loc
     if os.path.exists( loc ):
         if os.path.isdir( loc ):
             entries = os.listdir( loc )
@@ -54,12 +55,15 @@ def iterate( loc ):
         return
 
 def rename( item ):
-#    print "From:\t" + item
-    item_en = item
+    toren_en = item.split( '/' )[-1]
+
     for k in chart:
-        item_en = item_en.replace( k , chart[k] )
+        toren_en = toren_en.replace( k , chart[k] )
+
+    toren_en = "/".join( item.split( '/' )[0:-1] ) + os.path.sep + toren_en.lower()
     
-    print "To:\t" + item_en.lower()
+    print "Renaming : " + item + " to " + toren_en
+    os.rename( item , toren_en )
 
 def usage():
     print "Usage:\n\tar2en.py <directory>|<file>"
@@ -67,7 +71,7 @@ def usage():
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         loc = sys.argv[1]
-        iterate( loc )
+        iterate( os.path.abspath( loc ) )
     else:
         usage()
         exit
